@@ -25,12 +25,19 @@ import javax.annotation.Resource;
  */
 public class NettyWebSocketServerHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
 
+
     private WebSocketService webSocketService;
+
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        userOffLine(ctx);
+    }
 
     @Override
     public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
         WebSocketService service = this.getService();
         this.webSocketService =service;
+        webSocketService.connect(ctx.channel());
     }
 
     private WebSocketService getService() {
@@ -45,8 +52,14 @@ public class NettyWebSocketServerHandler extends SimpleChannelInboundHandler<Tex
         }else if(evt instanceof IdleStateEvent){
             IdleStateEvent idleStateEvent = (IdleStateEvent) evt;
             System.out.println(idleStateEvent.state()+"读空闲");
-
+            //用户下线
+            userOffLine(ctx);
         }
+    }
+
+    private void userOffLine(ChannelHandlerContext ctx) {
+        webSocketService.offLine(ctx.channel());
+        ctx.channel().close();
     }
 
     @Override
@@ -55,7 +68,7 @@ public class NettyWebSocketServerHandler extends SimpleChannelInboundHandler<Tex
         WSBaseReq req = JSONUtil.toBean(text, WSBaseReq.class);
         switch (WSReqTypeEnum.of(req.getType())) {
             case LOGIN:
-                this.webSocketService.handleLoginReq(channelHandlerContext);
+                this.webSocketService.handleLoginReq(channelHandlerContext.channel());
                 break;
             case AUTHORIZE:
                 break;

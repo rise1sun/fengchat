@@ -8,8 +8,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
 import java.util.Date;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 /**
  * <p>
@@ -19,9 +18,12 @@ import lombok.EqualsAndHashCode;
  * @author jiangfeng
  * @since 2023-11-10
  */
+@Builder
 @Data
 @EqualsAndHashCode(callSuper = false)
 @TableName("user")
+@NoArgsConstructor
+@AllArgsConstructor
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;

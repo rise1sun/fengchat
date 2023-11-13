@@ -1,5 +1,6 @@
 package com.feng.fengchat.common.user.service;
 
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import me.chanjar.weixin.common.error.WxErrorException;
 
@@ -12,8 +13,12 @@ public interface WebSocketService {
 
     /**
      * 获取二维码url
-     * @param channelHandlerContext
+     * @param channel
      * @throws WxErrorException
      */
-    void handleLoginReq(ChannelHandlerContext channelHandlerContext) throws WxErrorException;
+    void handleLoginReq(Channel channel) throws WxErrorException;
+
+    void offLine(Channel channel);
+
+    void connect(Channel channel);
 }
