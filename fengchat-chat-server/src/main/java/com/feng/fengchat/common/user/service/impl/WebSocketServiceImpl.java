@@ -3,8 +3,11 @@ package com.feng.fengchat.common.user.service.impl;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.json.JSONUtil;
+import com.feng.fengchat.common.user.dao.UserDao;
 import com.feng.fengchat.common.user.domain.dto.WSChannelExtraDTO;
+import com.feng.fengchat.common.user.domain.entity.User;
 import com.feng.fengchat.common.user.domain.vo.resp.WSBaseResp;
+import com.feng.fengchat.common.user.service.UserService;
 import com.feng.fengchat.common.user.service.WebSocketService;
 import com.feng.fengchat.common.user.service.adapter.WSAdapter;
 import com.github.benmanes.caffeine.cache.Cache;
@@ -45,6 +48,12 @@ public class WebSocketServiceImpl implements WebSocketService {
     @Resource
     private WxMpService wxMpService;
 
+    @Resource
+    private UserService userService;
+
+    @Resource
+    private UserDao userDao;
+
     @Override
     public void handleLoginReq(Channel channel) throws WxErrorException {
         //获取随机场景code,并于channel关联
@@ -62,6 +71,37 @@ public class WebSocketServiceImpl implements WebSocketService {
     @Override
     public void connect(Channel channel) {
         ONLINE_WS_MAP.put(channel,new WSChannelExtraDTO());
+    }
+
+    @Override
+    public void waitAuth(Integer code) {
+        Channel channel = WAIT_LOGIN_MAP.getIfPresent(code);
+        if(ObjectUtil.isNull(channel)){
+            return;
+        }
+        sendMsg(channel,WSAdapter.buildWaitAuthResp());
+
+    }
+
+    @Override
+    public void authSuccess(Integer code, Long uid) {
+        Channel channel = WAIT_LOGIN_MAP.getIfPresent(code);
+        if(ObjectUtil.isNull(channel)){
+            return;
+        }
+
+        User user = userDao.getById(uid);
+        String taken = userService.login(uid);
+        WAIT_LOGIN_MAP.invalidate(code);
+        loginSuccess(channel,user,taken);
+    }
+
+    private void loginSuccess(Channel channel, User user, String taken) {
+        //登录成功，绑定channel和uid关系
+        WSChannelExtraDTO wsChannelExtraDTO = ONLINE_WS_MAP.get(channel);
+        wsChannelExtraDTO.setUid(user.getId());
+
+        sendMsg(channel,WSAdapter.buildLoginSuccessResp(user,taken));
     }
 
     /**

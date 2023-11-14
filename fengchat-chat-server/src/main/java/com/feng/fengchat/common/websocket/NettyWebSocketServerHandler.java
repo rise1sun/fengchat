@@ -6,6 +6,7 @@ import com.feng.fengchat.common.user.domain.vo.enums.WSReqTypeEnum;
 import com.feng.fengchat.common.user.domain.vo.enums.WSRespTypeEnum;
 import com.feng.fengchat.common.user.domain.vo.req.WSBaseReq;
 import com.feng.fengchat.common.user.service.WebSocketService;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.HttpRequest;
@@ -23,6 +24,7 @@ import javax.annotation.Resource;
  * @author jiangfeng
  * @date 2023/11/10
  */
+@ChannelHandler.Sharable
 public class NettyWebSocketServerHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
 
 

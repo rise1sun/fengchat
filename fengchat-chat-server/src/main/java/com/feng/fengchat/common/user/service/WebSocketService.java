@@ -21,4 +21,12 @@ public interface WebSocketService {
     void offLine(Channel channel);
 
     void connect(Channel channel);
+
+    /**
+     * 等待授权
+     * @param code
+     */
+    void waitAuth(Integer code);
+
+    void authSuccess(Integer integer, Long id);
 }

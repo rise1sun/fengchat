@@ -34,3 +34,5 @@ wx:
         aesKey: ${mallchat.wx.aesKey} # 接口配置里的EncodingAESKey值
 server:
   port: 8081
+jwt:
+    secret: ${mallchat.jwt.secret}

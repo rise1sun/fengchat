@@ -14,4 +14,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface UserService {
 
     Long registered(User insert);
+
+    String login(Long id);
 }
