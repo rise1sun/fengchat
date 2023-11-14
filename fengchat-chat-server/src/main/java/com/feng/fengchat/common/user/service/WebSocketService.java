@@ -29,4 +29,10 @@ public interface WebSocketService {
     void waitAuth(Integer code);
 
     void authSuccess(Integer integer, Long id);
+
+    /**
+     * 处理授权成功
+     * @param token
+     */
+    void handleAuthSuccess(Channel channel,String token);
 }

@@ -9,6 +9,9 @@ import java.util.concurrent.ThreadFactory;
  * Author: <a href="https://github.com/zongzibinbin">abin</a>
  * Date: 2023-09-02
  */
+//这个类的作用是什么 AllArgsConstructor是什么意思
+
+
 @AllArgsConstructor
 public class MyThreadFactory implements ThreadFactory {
     private static final MyUncaughtExceptionHandler MY_UNCAUGHT_EXCEPTION_HANDLER = new MyUncaughtExceptionHandler();
@@ -22,3 +25,4 @@ public class MyThreadFactory implements ThreadFactory {
         return thread;
     }
 }
+

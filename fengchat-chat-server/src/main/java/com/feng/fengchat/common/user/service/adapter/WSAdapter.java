@@ -49,4 +49,10 @@ public class WSAdapter {
         wsLoginSuccessWSBaseResp.setDate(wsLoginSuccess);
         return wsLoginSuccessWSBaseResp;
     }
+
+    public static WSBaseResp buildInvolidTokenResp() {
+        WSBaseResp<WSLoginUrl> wsLoginUrlWSBaseResp = new WSBaseResp<>();
+        wsLoginUrlWSBaseResp.setType(WSRespTypeEnum.INVALIDATE_TOKEN.getType());
+        return  wsLoginUrlWSBaseResp;
+    }
 }

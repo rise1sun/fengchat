@@ -3,10 +3,12 @@ package com.feng.fengchat.common.user.service.impl;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.json.JSONUtil;
+import com.feng.fengchat.common.common.utils.RedisUtils;
 import com.feng.fengchat.common.user.dao.UserDao;
 import com.feng.fengchat.common.user.domain.dto.WSChannelExtraDTO;
 import com.feng.fengchat.common.user.domain.entity.User;
 import com.feng.fengchat.common.user.domain.vo.resp.WSBaseResp;
+import com.feng.fengchat.common.user.service.LoginService;
 import com.feng.fengchat.common.user.service.UserService;
 import com.feng.fengchat.common.user.service.WebSocketService;
 import com.feng.fengchat.common.user.service.adapter.WSAdapter;
@@ -54,6 +56,9 @@ public class WebSocketServiceImpl implements WebSocketService {
     @Resource
     private UserDao userDao;
 
+    @Resource
+    private LoginService loginService;
+
     @Override
     public void handleLoginReq(Channel channel) throws WxErrorException {
         //获取随机场景code,并于channel关联
@@ -91,9 +96,26 @@ public class WebSocketServiceImpl implements WebSocketService {
         }
 
         User user = userDao.getById(uid);
-        String taken = userService.login(uid);
+        String token = userService.login(uid);
         WAIT_LOGIN_MAP.invalidate(code);
-        loginSuccess(channel,user,taken);
+        loginSuccess(channel,user,token);
+    }
+
+    @Override
+    public void handleAuthSuccess(Channel channel,String token) {
+        Long uid = loginService.getValidUid(token);
+        if(Objects.nonNull(uid)){
+            User user = userDao.getById(uid);
+            //登录成功
+            loginSuccess(channel,user,token);
+        }else{
+            //token失效
+            sendMsg(channel,WSAdapter.buildInvolidTokenResp());
+        }
+
+
+
+
     }
 
     private void loginSuccess(Channel channel, User user, String taken) {

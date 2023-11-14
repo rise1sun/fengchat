@@ -28,7 +28,7 @@ public class ThreadPoolConfig implements AsyncConfigurer {
         return mallchatExecutor();
     }
 
-    @Bean(MALLCHAT_EXECUTOR)
+    @Bean(MALLCHAT_EXECUTOR)  
     @Primary
     public ThreadPoolTaskExecutor mallchatExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();

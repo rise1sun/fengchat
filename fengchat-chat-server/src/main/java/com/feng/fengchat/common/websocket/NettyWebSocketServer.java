@@ -22,7 +22,6 @@ import javax.annotation.PreDestroy;
 
 @Slf4j
 @Configuration
-@ChannelHandler.Sharable
 public class NettyWebSocketServer {
     public static final int WEB_SOCKET_PORT = 8090;
     public static final NettyWebSocketServerHandler NETTY_WEB_SOCKET_SERVER_HANDLER = new NettyWebSocketServerHandler();

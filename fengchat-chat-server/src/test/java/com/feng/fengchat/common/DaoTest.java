@@ -8,9 +8,13 @@ import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.result.WxMpQrCodeTicket;
 import org.junit.jupiter.api.Test;
 import org.redisson.Redisson;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import javax.annotation.Resource;
+
+import static com.feng.fengchat.common.common.config.ThreadPoolConfig.MALLCHAT_EXECUTOR;
 
 /**
  *
@@ -51,6 +55,20 @@ public class DaoTest {
         redisson.getLock("test1").lock();
         System.out.println();
         redisson.getLock("test1").unlock();
+
+    }
+
+    @Resource
+    @Qualifier(MALLCHAT_EXECUTOR)
+    private ThreadPoolTaskExecutor executor;
+    @Test
+    public void threadPoolTest() throws InterruptedException {
+        executor.execute(()->{
+            if(true){
+                throw new RuntimeException("报错了");
+            }
+        });
+        Thread.sleep(200);
 
     }
 }

@@ -53,8 +53,6 @@ public class NettyWebSocketServerHandler extends SimpleChannelInboundHandler<Tex
             System.out.println("握手完成");
         }else if(evt instanceof IdleStateEvent){
             IdleStateEvent idleStateEvent = (IdleStateEvent) evt;
-            System.out.println(idleStateEvent.state()+"读空闲");
-            //用户下线
             userOffLine(ctx);
         }
     }
@@ -73,6 +71,7 @@ public class NettyWebSocketServerHandler extends SimpleChannelInboundHandler<Tex
                 this.webSocketService.handleLoginReq(channelHandlerContext.channel());
                 break;
             case AUTHORIZE:
+                webSocketService.handleAuthSuccess(channelHandlerContext.channel(),req.getDate());
                 break;
             case HEARTBEAT:
                 break;
