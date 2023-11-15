@@ -1,6 +1,6 @@
-package com.feng.fengchat.common.user.domain.vo.resp;
+package com.feng.fengchat.common.websocket.domain.vo.resp;
 
-import com.feng.fengchat.common.user.domain.vo.enums.WSRespTypeEnum;
+import com.feng.fengchat.common.websocket.domain.vo.enums.WSRespTypeEnum;
 import lombok.Data;
 
 /**

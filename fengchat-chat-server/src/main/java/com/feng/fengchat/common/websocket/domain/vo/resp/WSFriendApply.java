@@ -1,5 +1,6 @@
-package com.feng.fengchat.common.user.domain.vo.resp;
+package com.feng.fengchat.common.websocket.domain.vo.resp;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +15,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class WSLoginUrl {
-    private String loginUrl;
+public class WSFriendApply {
+    @ApiModelProperty("申请人")
+    private Long uid;
+    @ApiModelProperty("申请未读数")
+    private Integer unreadCount;
 }

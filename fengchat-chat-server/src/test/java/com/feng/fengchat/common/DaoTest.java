@@ -3,6 +3,7 @@ package com.feng.fengchat.common;
 import com.feng.fengchat.common.common.utils.RedisUtils;
 import com.feng.fengchat.common.user.dao.UserDao;
 import com.feng.fengchat.common.user.domain.entity.User;
+import com.feng.fengchat.common.user.service.LoginService;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.result.WxMpQrCodeTicket;
@@ -70,5 +71,12 @@ public class DaoTest {
         });
         Thread.sleep(200);
 
+    }
+
+    @Resource
+    private LoginService loginService;
+    @Test
+    public void getToken(){
+        System.out.println(loginService.login(10005L));
     }
 }

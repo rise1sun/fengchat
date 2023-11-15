@@ -1,4 +1,4 @@
-package com.feng.fengchat.common.user.domain.vo.resp;
+package com.feng.fengchat.common.websocket.domain.vo.resp;
 
 import lombok.Data;
 

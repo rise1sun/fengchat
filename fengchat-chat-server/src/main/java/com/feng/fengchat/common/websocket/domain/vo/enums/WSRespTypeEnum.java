@@ -1,6 +1,7 @@
-package com.feng.fengchat.common.user.domain.vo.enums;
+package com.feng.fengchat.common.websocket.domain.vo.enums;
 
 import com.feng.fengchat.common.user.domain.vo.resp.*;
+import com.feng.fengchat.common.websocket.domain.vo.resp.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

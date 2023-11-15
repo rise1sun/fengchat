@@ -3,11 +3,10 @@ package com.feng.fengchat.common.user.service.impl;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.json.JSONUtil;
-import com.feng.fengchat.common.common.utils.RedisUtils;
 import com.feng.fengchat.common.user.dao.UserDao;
-import com.feng.fengchat.common.user.domain.dto.WSChannelExtraDTO;
+import com.feng.fengchat.common.websocket.domain.dto.WSChannelExtraDTO;
 import com.feng.fengchat.common.user.domain.entity.User;
-import com.feng.fengchat.common.user.domain.vo.resp.WSBaseResp;
+import com.feng.fengchat.common.websocket.domain.vo.resp.WSBaseResp;
 import com.feng.fengchat.common.user.service.LoginService;
 import com.feng.fengchat.common.user.service.UserService;
 import com.feng.fengchat.common.user.service.WebSocketService;
@@ -15,18 +14,15 @@ import com.feng.fengchat.common.user.service.adapter.WSAdapter;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.result.WxMpQrCodeTicket;
-import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.time.Duration;
 import java.util.Objects;
-import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**

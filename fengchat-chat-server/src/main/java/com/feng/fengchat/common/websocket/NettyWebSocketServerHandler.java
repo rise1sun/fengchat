@@ -1,23 +1,18 @@
 package com.feng.fengchat.common.websocket;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSONUtil;
-import com.feng.fengchat.common.user.domain.vo.enums.WSReqTypeEnum;
-import com.feng.fengchat.common.user.domain.vo.enums.WSRespTypeEnum;
-import com.feng.fengchat.common.user.domain.vo.req.WSBaseReq;
+import com.feng.fengchat.common.websocket.domain.vo.enums.WSReqTypeEnum;
+import com.feng.fengchat.common.websocket.domain.vo.req.WSBaseReq;
 import com.feng.fengchat.common.user.service.WebSocketService;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.handler.timeout.IdleStateEvent;
-import io.netty.handler.timeout.IdleStateHandler;
-import me.chanjar.weixin.mp.api.WxMpService;
-import me.chanjar.weixin.mp.bean.result.WxMpQrCodeTicket;
-
-import javax.annotation.Resource;
 
 /**
  *
@@ -48,9 +43,14 @@ public class NettyWebSocketServerHandler extends SimpleChannelInboundHandler<Tex
     }
 
     @Override
-    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+    public void userEventTriggered(ChannelHandlerContext ctx,Object evt) throws Exception {
         if (evt instanceof WebSocketServerProtocolHandler.HandshakeComplete) {
             System.out.println("握手完成");
+            Channel channel = ctx.channel();
+            String token = NettyUtils.getAttr(channel, NettyUtils.TOKEN);
+            if(StrUtil.isNotBlank(token)){
+                webSocketService.handleAuthSuccess(channel,token);
+            }
         }else if(evt instanceof IdleStateEvent){
             IdleStateEvent idleStateEvent = (IdleStateEvent) evt;
             userOffLine(ctx);

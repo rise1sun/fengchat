@@ -1,10 +1,10 @@
 package com.feng.fengchat.common.user.service.adapter;
 
 import com.feng.fengchat.common.user.domain.entity.User;
-import com.feng.fengchat.common.user.domain.vo.enums.WSRespTypeEnum;
-import com.feng.fengchat.common.user.domain.vo.resp.WSBaseResp;
-import com.feng.fengchat.common.user.domain.vo.resp.WSLoginSuccess;
-import com.feng.fengchat.common.user.domain.vo.resp.WSLoginUrl;
+import com.feng.fengchat.common.websocket.domain.vo.enums.WSRespTypeEnum;
+import com.feng.fengchat.common.websocket.domain.vo.resp.WSBaseResp;
+import com.feng.fengchat.common.websocket.domain.vo.resp.WSLoginSuccess;
+import com.feng.fengchat.common.websocket.domain.vo.resp.WSLoginUrl;
 import me.chanjar.weixin.mp.bean.result.WxMpQrCodeTicket;
 import org.springframework.stereotype.Component;
 
