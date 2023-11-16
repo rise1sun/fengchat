@@ -1,4 +1,4 @@
-package com.feng.fengchat.common.common.config;
+package com.feng.fengchat.common.common.intercepetor;
 
 import com.feng.fengchat.common.common.domain.vo.HttpRequestErrorEnum;
 import com.feng.fengchat.common.user.service.LoginService;
@@ -20,11 +20,12 @@ import java.util.Optional;
  * @date 2023/11/15
  */
 @Component
-public class TokenIntercepetorConfig implements HandlerInterceptor {
+public class TokenIntercepetor implements HandlerInterceptor {
     public static final String HEADERS_AUTHORIZATION = "Authorization";
     public static final String BEARER_ = "Bearer ";
     public static final String UID = "uid";
     public static final String PUBLIC = "public";
+    private static final int PBULIC_LENGTH = 3;
     @Resource
     private LoginService loginService;
 
@@ -45,12 +46,12 @@ public class TokenIntercepetorConfig implements HandlerInterceptor {
                 return false;
             }
         }
-        return false;
+        return true;
     }
 
     private boolean isPublicURI(String requestURI) {
         String[] split = requestURI.split("/");
-        if(split.length > 3 && PUBLIC.equals(split[3])){
+        if(split.length > PBULIC_LENGTH&& PUBLIC.equals(split[PBULIC_LENGTH])){
             return true;
         }
         return false;

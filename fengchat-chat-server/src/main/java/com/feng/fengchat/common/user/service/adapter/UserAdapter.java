@@ -2,7 +2,10 @@ package com.feng.fengchat.common.user.service.adapter;
 
 import cn.hutool.core.util.RandomUtil;
 import com.feng.fengchat.common.user.domain.entity.User;
+import com.feng.fengchat.common.user.domain.vo.resp.UserInfoResp;
+import jodd.bean.BeanCopy;
 import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
+import org.springframework.beans.BeanUtils;
 
 /**
  *
@@ -27,5 +30,12 @@ public class UserAdapter {
             user.setName(userInfo.getNickname());
         }
         return user;
+    }
+
+    public static UserInfoResp buildUserInfoResp(User user,Integer countModfiyNameCard) {
+        UserInfoResp userInfoResp = new UserInfoResp();
+        BeanUtils.copyProperties(user, userInfoResp);
+        userInfoResp.setModifyNameChance(countModfiyNameCard);
+        return userInfoResp;
     }
 }

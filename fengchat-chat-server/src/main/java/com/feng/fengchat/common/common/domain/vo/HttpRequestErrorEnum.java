@@ -1,6 +1,7 @@
 package com.feng.fengchat.common.common.domain.vo;
 
 import com.feng.fengchat.common.common.domain.vo.response.ApiResult;
+import com.feng.fengchat.common.common.utils.JsonUtils;
 import lombok.AllArgsConstructor;
 import org.apache.commons.codec.Charsets;
 
@@ -22,9 +23,8 @@ public enum HttpRequestErrorEnum {
 
 
     public void sendError(HttpServletResponse response) throws Exception {
-       // response.setStatus(this.code);
         response.setContentType(Charsets.UTF_8.toString());
-        response.getWriter().write(ApiResult.fail(this.code,this.message).toString() );
+        response.getWriter().write(JsonUtils.toStr(ApiResult.fail(this.code,this.message)));
     }
 
 }
