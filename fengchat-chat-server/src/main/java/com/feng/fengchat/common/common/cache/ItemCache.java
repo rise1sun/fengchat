@@ -2,6 +2,7 @@ package com.feng.fengchat.common.common.cache;
 
 import com.feng.fengchat.common.user.dao.ItemConfigDao;
 import com.feng.fengchat.common.user.domain.entity.ItemConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
@@ -23,5 +24,14 @@ public class ItemCache {
     public List<ItemConfig> getByType(Integer type) {
         List<ItemConfig> list =itemConfigDao.getByType(type);
         return list;
+    }
+
+
+    @CacheEvict(value = "itemConfig", key = "'itemConfig:'+#type")
+    public void ClearItemConfig(Integer type) {
+    }
+
+    public ItemConfig getById(Long itemId) {
+        return itemConfigDao.vaildById(itemId);
     }
 }

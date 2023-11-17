@@ -46,4 +46,6 @@ public interface UserService {
     void modifyName(Long uid,String name);
 
     List<BadgeInfoResp> getBadgeList(Long uid);
+
+    void wearingBadge(Long itemId, Long uid);
 }

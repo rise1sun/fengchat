@@ -1,5 +1,6 @@
 package com.feng.fengchat.common.user.service.impl;
 
+import com.feng.fengchat.common.common.annotation.RedissonLock;
 import com.feng.fengchat.common.common.cache.ItemCache;
 import com.feng.fengchat.common.common.constant.RedisKey;
 import com.feng.fengchat.common.common.domain.enums.ItemEnum;
@@ -71,7 +72,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+
     @Transactional(rollbackFor = Exception.class)
+    @RedissonLock(key = "#uid")
     public void modifyName(Long uid,String name) {
         //校验名字是否重复
         User user = userDao.getUserByName(name);
@@ -96,6 +99,17 @@ public class UserServiceImpl implements UserService {
         //查询用户当前佩戴的标签
         User user = userDao.getById(uid);
         return UserAdapter.buildBadgeResp(itemConfigs, backpacks, user);
+    }
+
+    @Override
+    public void wearingBadge(Long itemId, Long uid) {
+        UserBackpack userBackpack = userBackpackDao.getVaildById(itemId,uid);
+        AssertUtil.isEmpty(userBackpack,"背包没有徽章噢");
+        ItemConfig itemConfig =itemCache.getById(itemId);
+        AssertUtil.isEmpty(itemConfig,"佩戴的不是徽章噢");
+
+        userDao.wearingBadge(itemId,uid);
+
     }
 
     private String getUserTokenKey(Long id) {

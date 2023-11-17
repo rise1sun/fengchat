@@ -6,8 +6,8 @@ import com.feng.fengchat.common.common.domain.vo.response.ApiResult;
 import com.feng.fengchat.common.common.utils.RequestHolder;
 import com.feng.fengchat.common.user.dao.UserDao;
 import com.feng.fengchat.common.user.domain.entity.User;
-import com.feng.fengchat.common.user.domain.vo.req.BadgeReq;
 import com.feng.fengchat.common.user.domain.vo.req.ModifyNameReq;
+import com.feng.fengchat.common.user.domain.vo.req.WearingBadgeReq;
 import com.feng.fengchat.common.user.domain.vo.resp.BadgeInfoResp;
 import com.feng.fengchat.common.user.domain.vo.resp.UserInfoResp;
 import com.feng.fengchat.common.user.service.LoginService;
@@ -56,6 +56,13 @@ public class UserController {
     @ApiOperation(value = "徽章列表", notes = "徽章列表")
     public ApiResult<List<BadgeInfoResp>> getBadgeList() {
         return ApiResult.success(userService.getBadgeList(RequestHolder.get().getUid()));
+    }
+
+    @PutMapping("/wearingBadge")
+    @ApiOperation(value = "佩戴徽章", notes = "佩戴徽章")
+    public ApiResult<Void> wearingBadge(@Valid @RequestBody WearingBadgeReq req) {
+        userService.wearingBadge(req.getItemId(),RequestHolder.get().getUid());
+        return ApiResult.success();
     }
 }
 

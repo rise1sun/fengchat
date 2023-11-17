@@ -12,7 +12,7 @@ import lombok.NonNull;
  */
 @Data
 @ApiModel("徽章请求")
-public class BadgeReq {
+public class WearingBadgeReq {
 
     @ApiModelProperty(value = "徽章id")
     @NonNull

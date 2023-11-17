@@ -1,5 +1,6 @@
 package com.feng.fengchat.common.user.service;
 
+import com.feng.fengchat.common.common.domain.enums.IdempotentEnum;
 import com.feng.fengchat.common.user.domain.entity.UserBackpack;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -11,6 +12,15 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author jiangfeng
  * @since 2023-11-15
  */
-public interface IUserBackpackService extends IService<UserBackpack> {
+public interface IUserBackpackService{
+
+    /**
+     *
+     * @param uid
+     * @param itemId
+     * @param idempotentEnum
+     * @param busies
+     */
+     void acquireItem(Long uid, Long itemId, IdempotentEnum idempotentEnum, String busies);
 
 }
