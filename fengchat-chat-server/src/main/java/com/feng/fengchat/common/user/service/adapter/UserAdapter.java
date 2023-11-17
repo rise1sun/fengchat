@@ -1,11 +1,21 @@
 package com.feng.fengchat.common.user.service.adapter;
 
 import cn.hutool.core.util.RandomUtil;
+import com.feng.fengchat.common.common.domain.enums.YesOrNoEnum;
+import com.feng.fengchat.common.user.domain.entity.ItemConfig;
 import com.feng.fengchat.common.user.domain.entity.User;
+import com.feng.fengchat.common.user.domain.entity.UserBackpack;
+import com.feng.fengchat.common.user.domain.vo.resp.BadgeInfoResp;
 import com.feng.fengchat.common.user.domain.vo.resp.UserInfoResp;
 import jodd.bean.BeanCopy;
 import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
 import org.springframework.beans.BeanUtils;
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -37,5 +47,17 @@ public class UserAdapter {
         BeanUtils.copyProperties(user, userInfoResp);
         userInfoResp.setModifyNameChance(countModfiyNameCard);
         return userInfoResp;
+    }
+
+    public static List<BadgeInfoResp> buildBadgeResp(List<ItemConfig> itemConfigs, List<UserBackpack> backpacks, User user) {
+        Set<Long> collect = backpacks.stream().map(UserBackpack::getItemId).collect(Collectors.toSet());
+        return itemConfigs.stream().map(m -> {
+                    BadgeInfoResp resp = new BadgeInfoResp();
+                    BeanUtils.copyProperties(m, resp);
+                    resp.setObtain(collect.contains(m.getId())? YesOrNoEnum.YES.getStatus() :YesOrNoEnum.NO.getStatus());
+                    resp.setWearing(Objects.equals(user.getItemId(),m.getId())?YesOrNoEnum.YES.getStatus() :YesOrNoEnum.NO.getStatus());
+                    return resp;
+                }).sorted(Comparator.comparing(BadgeInfoResp::getWearing).reversed().thenComparing(BadgeInfoResp::getObtain))
+                        .collect(Collectors.toList());
     }
 }

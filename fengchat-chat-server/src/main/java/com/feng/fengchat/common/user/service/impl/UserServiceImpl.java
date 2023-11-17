@@ -1,14 +1,18 @@
 package com.feng.fengchat.common.user.service.impl;
 
+import com.feng.fengchat.common.common.cache.ItemCache;
 import com.feng.fengchat.common.common.constant.RedisKey;
 import com.feng.fengchat.common.common.domain.enums.ItemEnum;
+import com.feng.fengchat.common.common.domain.enums.ItemTypeEnum;
 import com.feng.fengchat.common.common.utils.AssertUtil;
 import com.feng.fengchat.common.common.utils.JwtUtils;
 import com.feng.fengchat.common.common.utils.RedisUtils;
 import com.feng.fengchat.common.user.dao.UserBackpackDao;
 import com.feng.fengchat.common.user.dao.UserDao;
+import com.feng.fengchat.common.user.domain.entity.ItemConfig;
 import com.feng.fengchat.common.user.domain.entity.User;
 import com.feng.fengchat.common.user.domain.entity.UserBackpack;
+import com.feng.fengchat.common.user.domain.vo.resp.BadgeInfoResp;
 import com.feng.fengchat.common.user.domain.vo.resp.UserInfoResp;
 import com.feng.fengchat.common.user.service.UserService;
 import com.feng.fengchat.common.user.service.adapter.UserAdapter;
@@ -16,7 +20,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -35,6 +42,9 @@ public class UserServiceImpl implements UserService {
 
     @Resource
     private JwtUtils jwtUtils;
+
+    @Resource
+    private ItemCache itemCache;
 
     @Override
     @Transactional
@@ -74,6 +84,18 @@ public class UserServiceImpl implements UserService {
         if(success){
             userDao.modifyName(uid,name);
         }
+    }
+
+    @Override
+    public List<BadgeInfoResp> getBadgeList(Long uid) {
+        //查询所有徽章
+        List<ItemConfig> itemConfigs = itemCache.getByType(ItemTypeEnum.BADGE.getType());
+        Set<Long> collect = itemConfigs.stream().map(ItemConfig::getId).collect(Collectors.toSet());
+        //查询用户拥有的徽章
+        List<UserBackpack> backpacks = userBackpackDao.getByItemIds(uid,collect);
+        //查询用户当前佩戴的标签
+        User user = userDao.getById(uid);
+        return UserAdapter.buildBadgeResp(itemConfigs, backpacks, user);
     }
 
     private String getUserTokenKey(Long id) {

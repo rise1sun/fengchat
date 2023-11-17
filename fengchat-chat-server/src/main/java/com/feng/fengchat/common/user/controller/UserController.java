@@ -6,7 +6,9 @@ import com.feng.fengchat.common.common.domain.vo.response.ApiResult;
 import com.feng.fengchat.common.common.utils.RequestHolder;
 import com.feng.fengchat.common.user.dao.UserDao;
 import com.feng.fengchat.common.user.domain.entity.User;
+import com.feng.fengchat.common.user.domain.vo.req.BadgeReq;
 import com.feng.fengchat.common.user.domain.vo.req.ModifyNameReq;
+import com.feng.fengchat.common.user.domain.vo.resp.BadgeInfoResp;
 import com.feng.fengchat.common.user.domain.vo.resp.UserInfoResp;
 import com.feng.fengchat.common.user.service.LoginService;
 import com.feng.fengchat.common.user.service.UserService;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Controller;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * <p>
@@ -48,5 +51,11 @@ public class UserController {
         return ApiResult.success();
     }
 
+
+    @GetMapping("/getBadgeList")
+    @ApiOperation(value = "徽章列表", notes = "徽章列表")
+    public ApiResult<List<BadgeInfoResp>> getBadgeList() {
+        return ApiResult.success(userService.getBadgeList(RequestHolder.get().getUid()));
+    }
 }
 

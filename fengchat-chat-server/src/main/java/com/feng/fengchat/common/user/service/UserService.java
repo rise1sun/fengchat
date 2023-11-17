@@ -2,7 +2,10 @@ package com.feng.fengchat.common.user.service;
 
 import com.feng.fengchat.common.common.domain.dto.RequestInfo;
 import com.feng.fengchat.common.user.domain.entity.User;
+import com.feng.fengchat.common.user.domain.vo.resp.BadgeInfoResp;
 import com.feng.fengchat.common.user.domain.vo.resp.UserInfoResp;
+
+import java.util.List;
 
 /**
  * <p>
@@ -41,4 +44,6 @@ public interface UserService {
      * @param name
      */
     void modifyName(Long uid,String name);
+
+    List<BadgeInfoResp> getBadgeList(Long uid);
 }

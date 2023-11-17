@@ -7,6 +7,9 @@ import com.feng.fengchat.common.user.service.IUserBackpackService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Set;
+
 /**
  * <p>
  * 用户背包表 服务实现类
@@ -37,5 +40,12 @@ public class UserBackpackDao extends ServiceImpl<UserBackpackMapper, UserBackpac
                         .set(UserBackpack::getStatus, YesOrNoEnum.YES.getStatus())
                         .update();
 
+    }
+
+    public List<UserBackpack> getByItemIds(Long uid, Set<Long> collect) {
+        return lambdaQuery().eq(UserBackpack::getUid, uid)
+                .in(UserBackpack::getItemId, collect)
+                .eq(UserBackpack::getStatus,YesOrNoEnum.NO.getStatus())
+                .list();
     }
 }
