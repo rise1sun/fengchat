@@ -23,11 +23,11 @@ public class MyHandShakerAuthHandler extends ChannelInboundHandlerAdapter {
             HttpRequest httpRequest = (HttpRequest)msg;
             String uri = httpRequest.uri();
             UrlBuilder urlBuilder = UrlBuilder.ofHttp(uri);
-            Optional<String> tokenOptional=Optional.of(urlBuilder)
+            String token = Optional.ofNullable(urlBuilder)
                     .map(UrlBuilder::getQuery)
-                    .map(k->k.get("token"))
-                    .map(CharSequence::toString);
-            NettyUtils.setAttr(ctx.channel(), NettyUtils.TOKEN, tokenOptional.get());
+                    .map(k -> k.get("token"))
+                    .map(CharSequence::toString).orElse("");
+            NettyUtils.setAttr(ctx.channel(), NettyUtils.TOKEN, token);
             httpRequest.setUri(urlBuilder.getPath().toString());
         }
         ctx.fireChannelRead(msg);

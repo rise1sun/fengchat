@@ -5,6 +5,7 @@ import com.feng.fengchat.common.common.cache.ItemCache;
 import com.feng.fengchat.common.common.constant.RedisKey;
 import com.feng.fengchat.common.common.domain.enums.ItemEnum;
 import com.feng.fengchat.common.common.domain.enums.ItemTypeEnum;
+import com.feng.fengchat.common.common.event.UserRegisteEvent;
 import com.feng.fengchat.common.common.utils.AssertUtil;
 import com.feng.fengchat.common.common.utils.JwtUtils;
 import com.feng.fengchat.common.common.utils.RedisUtils;
@@ -17,6 +18,7 @@ import com.feng.fengchat.common.user.domain.vo.resp.BadgeInfoResp;
 import com.feng.fengchat.common.user.domain.vo.resp.UserInfoResp;
 import com.feng.fengchat.common.user.service.UserService;
 import com.feng.fengchat.common.user.service.adapter.UserAdapter;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,12 +49,14 @@ public class UserServiceImpl implements UserService {
     @Resource
     private ItemCache itemCache;
 
+    @Resource
+    private ApplicationEventPublisher applicationEventPublisher;
+
     @Override
     @Transactional
     public Long registered(User insert) {
         userDao.save(insert);
-        //todo 注册监听
-
+        applicationEventPublisher.publishEvent(new UserRegisteEvent(this,insert));
         return insert.getId();
     }
 
