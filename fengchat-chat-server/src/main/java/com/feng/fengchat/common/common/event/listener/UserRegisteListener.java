@@ -8,6 +8,7 @@ import com.feng.fengchat.common.user.service.IUserBackpackService;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 import javax.annotation.Resource;
 
@@ -21,7 +22,8 @@ public class UserRegisteListener {
 
     @Resource
     private IUserBackpackService userBackpackService;
-    @EventListener(value = UserRegisteEvent.class)
+    //@EventListener(value = UserRegisteEvent.class)
+    @TransactionalEventListener(fallbackExecution = true)
     @Async
     public void sengCode(UserRegisteEvent event){
         User user = event.getUser();

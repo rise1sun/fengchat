@@ -3,7 +3,9 @@ package com.feng.fengchat.common.user.service.impl;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.json.JSONUtil;
+import com.feng.fengchat.common.common.event.UserOnlineEvent;
 import com.feng.fengchat.common.user.dao.UserDao;
+import com.feng.fengchat.common.websocket.NettyUtils;
 import com.feng.fengchat.common.websocket.domain.dto.WSChannelExtraDTO;
 import com.feng.fengchat.common.user.domain.entity.User;
 import com.feng.fengchat.common.websocket.domain.vo.resp.WSBaseResp;
@@ -18,10 +20,12 @@ import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.result.WxMpQrCodeTicket;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.time.Duration;
+import java.util.Date;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -54,6 +58,9 @@ public class WebSocketServiceImpl implements WebSocketService {
 
     @Resource
     private LoginService loginService;
+
+    @Resource
+    ApplicationEventPublisher applicationEventPublisher;
 
     @Override
     public void handleLoginReq(Channel channel) throws WxErrorException {
@@ -120,6 +127,10 @@ public class WebSocketServiceImpl implements WebSocketService {
         wsChannelExtraDTO.setUid(user.getId());
 
         sendMsg(channel,WSAdapter.buildLoginSuccessResp(user,taken));
+
+        user.setLastOptTime(new Date());
+        user.refreshIp(NettyUtils.getAttr(channel, NettyUtils.IP));
+        applicationEventPublisher.publishEvent(new UserOnlineEvent(this, user));
     }
 
     /**
