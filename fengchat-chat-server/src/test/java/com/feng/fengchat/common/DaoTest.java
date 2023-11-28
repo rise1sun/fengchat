@@ -11,11 +11,18 @@ import com.feng.fengchat.common.user.service.LoginService;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.result.WxMpQrCodeTicket;
+import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
+import org.apache.rocketmq.spring.core.RocketMQListener;
+import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.junit.jupiter.api.Test;
 import org.redisson.Redisson;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 
@@ -112,4 +119,17 @@ public class DaoTest {
         System.out.println("redissonLockTest");
         System.out.println();
     }
+
+    @Autowired
+    private RocketMQTemplate rocketMQTemplate;
+    @Test
+    public void sendMQ() {
+        String msg = "1235435";
+        Message<String> build = MessageBuilder
+                .withPayload(msg)
+                .setHeader("KEYS",msg)
+                .build();
+        rocketMQTemplate.send("test-topic", build);
+    }
+
 }
